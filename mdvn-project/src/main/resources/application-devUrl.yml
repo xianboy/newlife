@@ -1,0 +1,2 @@
+url:
+  retrieveRequirementListUrl : http://localhost:20002/mdvn-requirement/requirements/retrieveList
