@@ -13,4 +13,14 @@ public class BusinessException extends Throwable {
 
     private String msg;
 
+
+    /**
+     * 使用errorEnum 构建BusibessException
+     * @param errorEnum
+     */
+    public BusinessException(ErrorEnum errorEnum, String msg) {
+        this.code = errorEnum.getCode();
+        this.msg = msg;
+    }
+
 }

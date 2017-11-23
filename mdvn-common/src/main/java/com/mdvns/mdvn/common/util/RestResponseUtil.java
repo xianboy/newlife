@@ -47,7 +47,6 @@ public class RestResponseUtil {
         RestResponse restResponse = new RestResponse();
         restResponse.setCode(be.getCode());
         restResponse.setMsg(be.getMsg());
-
         return ResponseEntity.ok(restResponse);
     }
 

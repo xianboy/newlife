@@ -2,8 +2,9 @@ package com.mdvns.mdvn.requirement.service.impl;
 
 import com.mdvns.mdvn.common.bean.PageableCriteria;
 import com.mdvns.mdvn.common.bean.PageableResponse;
-import com.mdvns.mdvn.common.bean.RestResponse;
 import com.mdvns.mdvn.common.bean.RetrieveListByProjIdRequest;
+import com.mdvns.mdvn.common.constant.MdvnConstant;
+import com.mdvns.mdvn.common.util.PageableQueryUtil;
 import com.mdvns.mdvn.common.util.RestResponseUtil;
 import com.mdvns.mdvn.requirement.domain.Requirement;
 import com.mdvns.mdvn.requirement.repository.RequirementRepository;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +42,7 @@ public class RetrieveImpl implements RetrieveService {
         PageRequest pageRequest = null;
         //构建分页对象
         if (pageableCriteria == null) {
-            pageRequest = defaultPageReqestBuilder();
+            pageRequest = PageableQueryUtil.defaultPageReqestBuilder();
         } else {
             pageRequest = pageRequestBuilder(pageableCriteria);
         }
@@ -85,7 +85,7 @@ public class RetrieveImpl implements RetrieveService {
      * @param pageableCriteria
      * @return
      */
-    private PageRequest pageRequestBuilder(@Validated PageableCriteria pageableCriteria) {
+    private PageRequest pageRequestBuilder(PageableCriteria pageableCriteria) {
         //当前页
         Integer page = pageableCriteria.getPage();
         //每页条数
@@ -113,13 +113,7 @@ public class RetrieveImpl implements RetrieveService {
 
         return pageRequest;
     }
-    /**
-     * 构建默认分页查询参数对象
-     * @return
-     */
-    private PageRequest defaultPageReqestBuilder() {
-        return new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "id"));
-    }
+
 
     /**
      * 分页查询:

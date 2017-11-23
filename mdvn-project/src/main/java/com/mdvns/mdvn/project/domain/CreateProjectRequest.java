@@ -30,7 +30,9 @@ public class CreateProjectRequest {
     private Double contingency;
     /*项目附件: 多个附件的id*/
     private String attaches;
-
+    /*创建人Id*/
+    @NotBlank(message = "创建人id不能为空")
+    private String creatorId;
 
 
 

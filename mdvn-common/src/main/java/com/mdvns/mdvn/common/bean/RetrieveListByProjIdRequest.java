@@ -11,9 +11,14 @@ import javax.validation.constraints.NotNull;
 public class RetrieveListByProjIdRequest {
 
     /*project的Id*/
-    @NotNull
+    @NotNull(message = "projId不能为空")
     @Min(value = 1, message = "project id 不能小于1")
     private Long projId;
+
+    /*用户Id*/
+    @NotNull(message = "staffId不能为空")
+    @Min(value = 1, message = "staffId 不能小于1")
+    private Long staffId;
 
     private PageableCriteria pageableCriteria;
 }

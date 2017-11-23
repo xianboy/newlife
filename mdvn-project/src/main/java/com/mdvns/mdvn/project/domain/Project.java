@@ -16,7 +16,6 @@ public class Project {
     @Id
     @GeneratedValue
     private Long id;
-
     /*项目名称*/
     private String name;
     /*项目编号: Pxx*/
@@ -59,9 +58,19 @@ public class Project {
     /*是否被删除*/
     private Integer isDeleted;
     /*项目创建者Id*/
-    private String creator;
+    private String creatorId;
+    /*项目标签*/
+    private String tags;
+    /*项目的负责人*/
+    private String leaders;
     /*项目模型：id*/
     private String templates;
     /*项目附件：id*/
     private String attaches;
+
+    public void setStartDate(Long startDate) {
+    }
+
+    public void setEndDate(Long endDate) {
+    }
 }

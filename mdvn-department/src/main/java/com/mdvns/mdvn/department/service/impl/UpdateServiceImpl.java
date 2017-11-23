@@ -1,0 +1,56 @@
+package com.mdvns.mdvn.department.service.impl;
+
+import com.mdvns.mdvn.common.bean.RestResponse;
+import com.mdvns.mdvn.common.exception.BusinessException;
+import com.mdvns.mdvn.common.exception.ErrorEnum;
+import com.mdvns.mdvn.common.util.RestResponseUtil;
+import com.mdvns.mdvn.department.domain.UpdateDepartmentRequest;
+import com.mdvns.mdvn.department.domain.entity.Department;
+import com.mdvns.mdvn.department.repository.DepartmentRepository;
+import com.mdvns.mdvn.department.service.UpdateService;
+import com.mdvns.mdvn.department.uitil.DepartmentUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UpdateServiceImpl implements UpdateService {
+    private static final Logger LOG = LoggerFactory.getLogger(UpdateServiceImpl.class);
+
+    @Autowired
+    private DepartmentRepository deptRepository;
+
+
+    /**
+     * 更新
+     *
+     * @param updateRequest
+     * @return
+     */
+    @Override
+    public RestResponse<?> update(UpdateDepartmentRequest updateRequest) throws BusinessException {
+        //构建department并保存
+        Department dept = this.deptRepository.saveAndFlush(buildDeptByRequest(updateRequest));
+        //构建response对象
+        return RestResponseUtil.success2(DepartmentUtil.buildDetailByDepartment(dept));
+    }
+
+    /**
+     * 根据updateRequest 构建Department
+     * @param updateRequest
+     * @return
+     */
+    private Department buildDeptByRequest(UpdateDepartmentRequest updateRequest) throws BusinessException {
+        //根据id查询Department
+        Department dept = this.deptRepository.findOne(updateRequest.getId());
+        if (dept == null) {
+            LOG.error("ID为:{} 的Department不存在.", updateRequest.getId());
+            throw new BusinessException(ErrorEnum.NOT_EXISTS, "ID为[ "+updateRequest.getId()+" ] 的部门不存在");
+        }
+        dept.setPositions(updateRequest.getPositions().toString());
+        LOG.info("根据request构建的dept：{}", dept);
+        return dept;
+    }
+
+}
