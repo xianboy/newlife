@@ -1,8 +1,8 @@
 package com.mdvns.mdvn.requirement.service;
 
 import com.mdvns.mdvn.common.bean.RestResponse;
-import com.mdvns.mdvn.common.bean.RetrieveListByProjIdRequest;
-import org.springframework.http.ResponseEntity;
+import com.mdvns.mdvn.common.bean.SingleCriterionRequest;
+import com.mdvns.mdvn.common.exception.BusinessException;
 
 public interface RetrieveService {
 
@@ -11,9 +11,9 @@ public interface RetrieveService {
      * @param singleArgRequest
      * @return
      */
-    ResponseEntity<?> retrieveListByProjId(RetrieveListByProjIdRequest singleArgRequest);
+    RestResponse<?> retrieveListByProjId(SingleCriterionRequest singleArgRequest);
 
-//    ResponseEntity<?> retrieveList(RetrieveListRequest listRequest);
-
+    /*根据id获取详情*/
+    RestResponse<?> retrieveDetailById(SingleCriterionRequest singleCriterionRequest) throws BusinessException;
 
 }

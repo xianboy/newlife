@@ -2,6 +2,7 @@ package com.mdvns.mdvn.staff.web;
 
 import com.mdvns.mdvn.common.bean.PageableQueryWithoutArgRequest;
 import com.mdvns.mdvn.common.bean.RestResponse;
+import com.mdvns.mdvn.common.bean.RetrieveBaseInfoRequest;
 import com.mdvns.mdvn.common.bean.SingleCriterionRequest;
 import com.mdvns.mdvn.common.exception.BusinessException;
 import com.mdvns.mdvn.common.util.BindingResultUtil;
@@ -39,6 +40,17 @@ public class RetrieveController {
     public RestResponse<?> retrieveAll(@RequestBody @Validated PageableQueryWithoutArgRequest pageableQueryWithoutArgRequest, BindingResult bindingResult) {
         BindingResultUtil.brResolve(bindingResult);
         return this.retrieveService.retrieveAll(pageableQueryWithoutArgRequest);
+    }
+
+    /**
+     * 根据指定id集合查询id和name
+     * @param retrieveBaseInfoRequest
+     * @return
+     */
+    @PostMapping(value = "/retrieveBaseInfo")
+    public RestResponse<?> retrieveBaseInfo(@RequestBody @Validated RetrieveBaseInfoRequest retrieveBaseInfoRequest, BindingResult bindingResult) {
+        BindingResultUtil.brResolve(bindingResult);
+        return this.retrieveService.retrieveBaseInfo(retrieveBaseInfoRequest);
     }
 
 

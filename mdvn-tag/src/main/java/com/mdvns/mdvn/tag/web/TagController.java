@@ -2,11 +2,14 @@ package com.mdvns.mdvn.tag.web;
 
 import com.mdvns.mdvn.common.bean.PageableQueryWithoutArgRequest;
 import com.mdvns.mdvn.common.bean.RestResponse;
+import com.mdvns.mdvn.common.bean.RetrieveBaseInfoRequest;
 import com.mdvns.mdvn.common.bean.SingleCriterionRequest;
 import com.mdvns.mdvn.common.exception.BusinessException;
+import com.mdvns.mdvn.common.util.BindingResultUtil;
 import com.mdvns.mdvn.tag.domain.entity.Tag;
 import com.mdvns.mdvn.tag.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,8 +49,13 @@ public class TagController {
      * @return
      */
     @PostMapping(value = "/retrieveByName")
-    public RestResponse<?> retrieveDeatilByName(@RequestBody @Validated SingleCriterionRequest retrieveDetailRequest) throws BusinessException {
+    public RestResponse<?> retrieveDetailByName(@RequestBody @Validated SingleCriterionRequest retrieveDetailRequest) throws BusinessException {
         return this.tagService.retrieveDetailByName(retrieveDetailRequest);
     }
 
+    @PostMapping(value = "/retrieveBaseInfo")
+    public RestResponse<?> retrieveBaseInfo(@RequestBody @Validated RetrieveBaseInfoRequest retrieveBaseInfoRequest, BindingResult bindingResult) {
+        BindingResultUtil.brResolve(bindingResult);
+        return this.tagService.retrieveBaseInfo(retrieveBaseInfoRequest);
+    }
 }

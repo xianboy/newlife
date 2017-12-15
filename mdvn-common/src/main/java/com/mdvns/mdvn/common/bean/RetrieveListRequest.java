@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import java.util.List;
 import java.util.Map;
 
-@Data
+/*@Data
 @NoArgsConstructor
 public class RetrieveListRequest {
     @NotEmpty
@@ -17,4 +17,4 @@ public class RetrieveListRequest {
     private PageableCriteria pageableCriteria;
 
 
-}
+}*/

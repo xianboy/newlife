@@ -1,6 +1,7 @@
 package com.mdvns.mdvn.department.domain.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ public class Department {
     @Column(name = "name")
     private String name;
     /*是否已删除*/
+    @JsonIgnore
     private Integer isDeleted;
     /*创建时间*/
     private Timestamp createTime;

@@ -3,7 +3,19 @@
   <groupId>com.mdvns.mdvn</groupId>
   <artifactId>mdvn-common</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>mdvn-common</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <name>mdvn-common</name>
   <description>a common project for mdvn</description>
   <dependencies>
   	<dependency>
@@ -38,9 +50,9 @@
           <version>1.13.8.RELEASE</version>
       </dependency>
       <dependency>
-          <groupId>org.springframework.data</groupId>
-          <artifactId>spring-data-commons</artifactId>
-          <version>1.13.8.RELEASE</version>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-annotations</artifactId>
+          <version>2.8.0</version>
       </dependency>
   </dependencies>
 </project>

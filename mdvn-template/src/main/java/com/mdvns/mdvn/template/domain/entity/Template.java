@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -18,6 +15,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 public class Template {
 
     @Id
@@ -36,7 +34,7 @@ public class Template {
     private String name;
 
     /*编号*/
-    private String serialNum;
+    private String serialNo;
 
     /*引用次数*/
     @Column(nullable = false)

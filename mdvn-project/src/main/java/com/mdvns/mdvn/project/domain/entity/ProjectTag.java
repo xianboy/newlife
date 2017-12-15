@@ -19,7 +19,7 @@ public class ProjectTag {
     private Long creatorId;
     /*projId*/
     private Long projId;
-    /*模板Id*/
+    /*标签Id*/
     private Long tagId;
     /*创建时间*/
     private Timestamp createTime;

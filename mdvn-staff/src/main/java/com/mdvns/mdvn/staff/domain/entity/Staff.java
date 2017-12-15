@@ -1,17 +1,16 @@
 package com.mdvns.mdvn.staff.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
 @Data
 @NoArgsConstructor
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames ={"name"})})
 public class Staff {
     @Id
     @GeneratedValue
@@ -21,6 +20,7 @@ public class Staff {
     /*账号*/
     private String account;
     /*密码*/
+    @JsonIgnore
     private String password;
     /*姓名*/
     private String name;
@@ -53,7 +53,8 @@ public class Staff {
     private String status;
     /*性别*/
     private String gender;
-    /*标签*/
-    private String tags;
-
+    /*添加时间*/
+    private Timestamp createTime;
+    /*最后更新时间*/
+    private Timestamp lastUpdateTime;
 }

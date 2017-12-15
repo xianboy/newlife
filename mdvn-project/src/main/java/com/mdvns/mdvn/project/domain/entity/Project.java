@@ -4,61 +4,88 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
 
 @Entity
-@Table(name="project")
 @Data
 @NoArgsConstructor
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames ={"name"})})
 public class Project {
     //主键
     @Id
     @GeneratedValue
     private Long id;
+
+    /*项目创建者Id*/
+    private Long creatorId;
+
     /*项目名称*/
     private String name;
+
     /*项目编号: Pxx*/
-    private String serialNum;
+    private String serialNo;
+
     /*项目描述*/
     @Column(columnDefinition = "text", nullable = false)
     private String description;
+
     /*项目优先级*/
-    private Integer priority;
+    @Min(value = 1, message = "优先级不能小于1")
+    @Max(value = 5, message = "优先级不能大于4")
+    private Integer priority = 1;
+
     /*项目开始日期*/
     private Timestamp startDate;
+
     /*项目结束时期*/
     private Timestamp endDate;
+
     /*创建时间*/
-    private Timestamp createTime;
+    private Timestamp createTime = new Timestamp(System.currentTimeMillis());
+
     /*项目状态*/
-    private String status;
+    private String status = "new";
+
     /*状态色值*/
-    private String ragStatus;
+    private String ragStatus = "G";
+
     /*效率值*/
-    private Double efficiency;
+    private Double efficiency = 0.0;
+
     /*项目进度*/
-    private Double progress;
+    private Double progress = 0.0;
+
     /*项目可调整系数*/
-    private Double contingency;
+    private Double contingency = 0.0;
+
     /*项目成本*/
-    private Double cost;
+    private Double cost = 0.0;
+
     /*项目需求变更成本*/
-    private Double crCost;
+    private Double crCost = 0.0;
+
     /*story总数*/
-    private Integer storyQty;
+    private Integer storyQty = 0;
+
     /*storyPoint总数*/
-    private Double storyPointQty;
+    private Double storyPointQty = 0.0;
+
     /*crStory总数*/
-    private Integer crStoryQty;
+    private Integer crStoryQty = 0;
+
     /*crStoryPoint总数*/
-    private Integer crStoryPointQty;
+    private Integer crStoryPointQty = 0;
+
     /*需求变更占比*/
-    private Double crRate;
+    private Double crRate = 0.0;
+
     /*是否被删除*/
-    private Integer isDeleted;
-    /*项目创建者Id*/
-    private Long creatorId;
+    private Integer isDeleted = 0;
+
     /*项目附件：id*/
     private String attaches;
 

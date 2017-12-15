@@ -1,29 +1,35 @@
 package com.mdvns.mdvn.department.uitil;
 
-import com.mdvns.mdvn.common.bean.DepartmentDetail;
 import com.mdvns.mdvn.common.exception.BusinessException;
-import com.mdvns.mdvn.common.exception.ErrorEnum;
+import com.mdvns.mdvn.department.domain.DepartmentDetail;
 import com.mdvns.mdvn.department.domain.entity.Department;
+import com.mdvns.mdvn.department.domain.entity.Position;
+import com.mdvns.mdvn.department.repository.PositionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class DepartmentUtil {
 
+    @Autowired
+    private PositionRepository positionRepository;
+
     private static final Logger LOG = LoggerFactory.getLogger(DepartmentUtil.class);
+
     /**
      * 构建部门详情
+     *
      * @param dept
+     * @param positionRepository
      * @return
      */
-    public static DepartmentDetail buildDetailByDepartment(Department dept) throws BusinessException {
-        //如果dept为null抛异常
-        if (null==dept) {
-            LOG.error("数据不存在");
-            throw new BusinessException(ErrorEnum.DEPT_NOT_EXIST);
-        }
+    public static DepartmentDetail buildDetailByDepartment(Department dept, PositionRepository positionRepository) throws BusinessException {
+
         DepartmentDetail departmentDetail = new DepartmentDetail();
         //id
         departmentDetail.setId(dept.getId());
@@ -38,9 +44,15 @@ public class DepartmentUtil {
             departmentDetail.setCreateTime(dept.getCreateTime().getTime());
         }
         //职位
-        if (!StringUtils.isEmpty(dept.getPositions())) {
-            String[] names = StringUtils.split(dept.getPositions(), ",");
-            departmentDetail.setPositions(Arrays.asList(names));
+        String ids = dept.getPositions();
+        if (!StringUtils.isEmpty(ids)) {
+            List<Long> positions = new ArrayList<>();
+            for (String id : ids.split(",")) {
+                positions.add(Long.valueOf(id));
+            }
+
+            List<Position> positionList = positionRepository.findByIdIn(positions);
+            departmentDetail.setPositions(positionList);
         }
         return departmentDetail;
     }

@@ -1,11 +1,12 @@
 package com.mdvns.mdvn.requirement.web;
 
 import com.mdvns.mdvn.common.bean.RestResponse;
-import com.mdvns.mdvn.common.bean.RetrieveListByProjIdRequest;
+import com.mdvns.mdvn.common.bean.SingleCriterionRequest;
+import com.mdvns.mdvn.common.exception.BusinessException;
 import com.mdvns.mdvn.common.util.BindingResultUtil;
+import com.mdvns.mdvn.common.util.RestResponseUtil;
 import com.mdvns.mdvn.requirement.service.RetrieveService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,22 +25,26 @@ public class RetrieveController {
 
     /**
      * 查询指定project下的requirement列表:支持分页
-     * @param byProjIdRequest request
+     * @param singleCriterionRequest request
      * @param bindingResult bindingResult
      * @return
      */
     @PostMapping(value = "/retrieveList")
-    public ResponseEntity<?> retrieveListByProjId(@RequestBody @Validated RetrieveListByProjIdRequest byProjIdRequest, BindingResult bindingResult) {
+    public RestResponse<?> retrieveListByProjId(@RequestBody @Validated SingleCriterionRequest singleCriterionRequest, BindingResult bindingResult) {
         BindingResultUtil.brResolve(bindingResult);
-        return this.retrieveService.retrieveListByProjId(byProjIdRequest);
+        return this.retrieveService.retrieveListByProjId(singleCriterionRequest);
     }
 
-    /*
-     * 工具方法：查询列表(支持分页)
-     *
-    @PostMapping(value = "/retrieveList")
-    public ResponseEntity<?> retrieveList(@RequestBody RetrieveListRequest listRequest) {
-        return this.retrieveService.retrieveList(listRequest);
-    }*/
+    /**
+     * 根据id获取详情
+     * @param singleCriterionRequest request
+     * @param bindingResult bindingResult
+     * @return restResponse
+     */
+    @PostMapping(value = "/retrieveById")
+    public RestResponse<?> retrieveDetailById(@RequestBody @Validated SingleCriterionRequest singleCriterionRequest, BindingResult bindingResult) throws BusinessException {
+        BindingResultUtil.brResolve(bindingResult);
+        return this.retrieveService.retrieveDetailById(singleCriterionRequest);
+    }
 
 }

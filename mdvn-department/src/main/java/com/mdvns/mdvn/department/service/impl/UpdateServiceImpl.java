@@ -6,7 +6,7 @@ import com.mdvns.mdvn.common.exception.ErrorEnum;
 import com.mdvns.mdvn.common.util.RestResponseUtil;
 import com.mdvns.mdvn.department.domain.UpdateDepartmentRequest;
 import com.mdvns.mdvn.department.domain.entity.Department;
-import com.mdvns.mdvn.department.repository.DepartmentRepository;
+import com.mdvns.mdvn.department.repository.PositionRepository;
 import com.mdvns.mdvn.department.service.UpdateService;
 import com.mdvns.mdvn.department.uitil.DepartmentUtil;
 import org.slf4j.Logger;
@@ -20,6 +20,8 @@ public class UpdateServiceImpl implements UpdateService {
 
     @Autowired
     private DepartmentRepository deptRepository;
+    @Autowired
+    private PositionRepository positionRepository;
 
 
     /**
@@ -33,7 +35,7 @@ public class UpdateServiceImpl implements UpdateService {
         //构建department并保存
         Department dept = this.deptRepository.saveAndFlush(buildDeptByRequest(updateRequest));
         //构建response对象
-        return RestResponseUtil.success2(DepartmentUtil.buildDetailByDepartment(dept));
+        return RestResponseUtil.success(DepartmentUtil.buildDetailByDepartment(dept, this.positionRepository));
     }
 
     /**

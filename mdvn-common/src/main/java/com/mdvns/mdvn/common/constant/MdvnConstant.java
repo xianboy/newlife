@@ -1,17 +1,30 @@
 package com.mdvns.mdvn.common.constant;
 
 public interface MdvnConstant {
+    String SUCCESS_CODE = "000";
+    String D = "D";
+    String E = "E";
+    String P = "P";
+    String R = "R";
+    String S = "S";
+    String T = "T";
+    String ID = "id";
 
-    String CONSTANT_D = "D";
-    String CONSTANT_E = "E";
-    String CONSTANT_P = "P";
-    String CONSTANT_R = "R";
-    String CONSTANT_S = "S";
-    String CONSTANT_T = "T";
-    String CONSTANT_ID = "id";
+    //ragStatus: Red, Amber, Green
+    String RED = "RED";
+    String AMBER = "AMBER";
+    String GREEN = "GREEN";
 
+
+    //status: New, Open, In progress, Closed
+    String NEW = "NEW";
+    String OPEN = "OPEN";
+    String IN_PROGRESS = "IN_PROGRESS";
+    String CLOSE = "CLOSE";
+
+    //special character
     String COMMA = ",";
-
+    String DASH = "-";
 
     Integer ZERO = 0;
     Integer ONE = 1;

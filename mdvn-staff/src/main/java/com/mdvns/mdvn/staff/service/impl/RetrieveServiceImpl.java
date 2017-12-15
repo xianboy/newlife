@@ -1,10 +1,9 @@
 package com.mdvns.mdvn.staff.service.impl;
 
-import com.mdvns.mdvn.common.bean.PageableCriteria;
-import com.mdvns.mdvn.common.bean.PageableQueryWithoutArgRequest;
-import com.mdvns.mdvn.common.bean.RestResponse;
-import com.mdvns.mdvn.common.bean.SingleCriterionRequest;
+import com.mdvns.mdvn.common.bean.*;
+import com.mdvns.mdvn.common.bean.model.BaseInfo;
 import com.mdvns.mdvn.common.exception.BusinessException;
+import com.mdvns.mdvn.common.util.ConvertObjectUtil;
 import com.mdvns.mdvn.common.util.MdvnCommonUtil;
 import com.mdvns.mdvn.common.util.PageableQueryUtil;
 import com.mdvns.mdvn.common.util.RestResponseUtil;
@@ -18,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RetrieveServiceImpl implements RetrieveService {
@@ -39,7 +40,7 @@ public class RetrieveServiceImpl implements RetrieveService {
         //根据id查询
         Staff staff = this.staffRepository.findOne(id);
         //数据不存在，抛异常
-        MdvnCommonUtil.notExists(staff, "id", singleCriterionRequest.getCriterion());
+        MdvnCommonUtil.notExistingError(staff, "id", singleCriterionRequest.getCriterion());
         //返回结果
         return RestResponseUtil.success(StaffUtil.buildDetailByStaff(staff));
     }
@@ -52,7 +53,7 @@ public class RetrieveServiceImpl implements RetrieveService {
     @Override
     public RestResponse<?> retrieveAll(PageableQueryWithoutArgRequest pageableQueryWithoutArgRequest) {
         //获取分页参数对象
-        PageableCriteria pageableCriteria = pageableQueryWithoutArgRequest.getPageableCriteria();
+        com.mdvns.mdvn.common.bean.model.PageableCriteria pageableCriteria = pageableQueryWithoutArgRequest.getPageableCriteria();
         //构建PageRequest
         PageRequest pageRequest;
         if (null == pageableCriteria) {
@@ -65,6 +66,22 @@ public class RetrieveServiceImpl implements RetrieveService {
         //返回结果
         return RestResponseUtil.success(staffPage);
     }
+
+    /**
+     * 获取指定id集合的id和name
+     * @param retrieveBaseInfoRequest
+     * @return
+     */
+    @Override
+    public RestResponse<?> retrieveBaseInfo(RetrieveBaseInfoRequest retrieveBaseInfoRequest) {
+        //根据request获取id集合
+        List<Long> ids = retrieveBaseInfoRequest.getIds();
+        List<Object[]> resultSet = this.staffRepository.findIdAndNameById(ids);
+        List<BaseInfo> tags = ConvertObjectUtil.convertObjectArray2BaseInfo(resultSet);
+        LOG.info("获取指定id集合的id和name完成：{}", tags.toString());
+        return RestResponseUtil.success(tags);
+    }
+
 
 
 }

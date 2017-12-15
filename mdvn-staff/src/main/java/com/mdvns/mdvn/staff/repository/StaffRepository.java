@@ -4,13 +4,22 @@ import com.mdvns.mdvn.staff.domain.entity.Staff;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface StaffRepository extends JpaRepository<Staff, Long> {
 
     //根据account查询staff
     Staff findByAccount(String account);
     //查询id的最大值
-    @Query(value = "select max(id) from project", nativeQuery = true)
+    @Query(value = "select max(id) from staff", nativeQuery = true)
     Long getMaxId();
+
+    //根据登录名和密码查询staff
+    Staff findByAccountAndPassword(String account, String password);
+
+    //获取指定id集合的id和name
+    @Query("select s.id, s.name from Staff s where s.id in ?1 order by s.id")
+    List<Object[]> findIdAndNameById(List<Long> ids);
 /*
     Page<Staff> findAll(Pageable pageable);
 

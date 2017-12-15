@@ -1,11 +1,9 @@
 package com.mdvns.mdvn.tag.service.impl;
 
-import com.mdvns.mdvn.common.bean.PageableCriteria;
-import com.mdvns.mdvn.common.bean.PageableQueryWithoutArgRequest;
-import com.mdvns.mdvn.common.bean.RestResponse;
-import com.mdvns.mdvn.common.bean.SingleCriterionRequest;
+import com.mdvns.mdvn.common.bean.*;
 import com.mdvns.mdvn.common.constant.MdvnConstant;
 import com.mdvns.mdvn.common.exception.BusinessException;
+import com.mdvns.mdvn.common.util.ConvertObjectUtil;
 import com.mdvns.mdvn.common.util.MdvnCommonUtil;
 import com.mdvns.mdvn.common.util.PageableQueryUtil;
 import com.mdvns.mdvn.common.util.RestResponseUtil;
@@ -41,11 +39,10 @@ public class TagServiceImpl implements TagService {
     public RestResponse<?> create(Tag tag) throws BusinessException {
         //将名称包含的所有空格去掉
         String name = MdvnCommonUtil.trimAllSpace(tag.getName());
-        Tag tg;
         //根据name查询
-        tg = this.tagRepository.findByName(name);
+        Tag tg = this.tagRepository.findByName(name);
         //如果给定name的数据已存在,抛出异常
-        MdvnCommonUtil.exists(tg, "name", name);
+        MdvnCommonUtil.existingError(tg, "name", name);
         //设置name为去除空格后的name
         tag.setName(name);
         //设置编号
@@ -96,6 +93,20 @@ public class TagServiceImpl implements TagService {
             tags = new ArrayList<>();
         }
         //返回结果
+        return RestResponseUtil.success(tags);
+    }
+
+    /**
+     * 获取指定id集合的标签基本信息
+     * @param retrieveBaseInfoRequest
+     * @return
+     */
+    @Override
+    public RestResponse<?> retrieveBaseInfo(RetrieveBaseInfoRequest retrieveBaseInfoRequest) {
+        //根据request获取id集合
+        List<Long> ids = retrieveBaseInfoRequest.getIds();
+        List<Object[]> resultSet = this.tagRepository.findIdAndNameById(ids);
+        List<BaseInfo> tags = ConvertObjectUtil.convertObjectArray2BaseInfo(resultSet);
         return RestResponseUtil.success(tags);
     }
 

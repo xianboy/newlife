@@ -3,23 +3,28 @@ package com.mdvns.mdvn.staff.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @Data
 @NoArgsConstructor
 public class CreateStaffRequest {
     /*添加Staff的人*/
-    @NotBlank
+    @NotNull(message = "添加人id不能为空")
+    @Min(value = 1, message = "id不能小于1")
     private Long creatorId;
     /*登录名*/
-    @NotBlank
+    @NotBlank(message = "账号不能为空")
     private String account;
     /*姓名*/
-    @NotBlank
+    @NotBlank(message = "用户名不能为空")
     private String name;
     /*密码*/
-    @NotBlank
+    @NotBlank(message = "密码不能为空")
     private String password;
     /*头像*/
     private String avatar;
@@ -38,6 +43,6 @@ public class CreateStaffRequest {
     /*手机号码*/
     private String mobile;
     /*标签*/
-    private String tags;
+    private List<Long> tags;
 
 }

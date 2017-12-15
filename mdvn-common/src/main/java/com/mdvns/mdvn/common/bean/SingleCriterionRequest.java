@@ -1,5 +1,6 @@
 package com.mdvns.mdvn.common.bean;
 
+import com.mdvns.mdvn.common.bean.model.PageableCriteria;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,11 @@ public class SingleCriterionRequest {
     /*查询参数*/
     @NotNull(message = "查询参数不能为空")
     private String criterion;
+    /*分页对象*/
+    private PageableCriteria pageableCriteria;
 
-
+    public SingleCriterionRequest(Long staffId, String criterion) {
+        this.staffId = staffId;
+        this.criterion = criterion;
+    }
 }

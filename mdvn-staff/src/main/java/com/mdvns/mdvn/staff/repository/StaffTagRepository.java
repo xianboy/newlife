@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface StaffTagRepository extends JpaRepository<StaffTag, Integer> {
+public interface StaffTagRepository extends JpaRepository<StaffTag, Long> {
 
     List<StaffTag> findByStaffIdAndIsDeleted(String staffId, Integer idDeleted);
 
@@ -14,4 +14,6 @@ public interface StaffTagRepository extends JpaRepository<StaffTag, Integer> {
 
     @Query("select st.tagId from StaffTag st where st.staffId =?1")
     List<String> findTagIdByStaffId(String staffId);
+
+
 }

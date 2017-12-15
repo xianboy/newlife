@@ -1,7 +1,16 @@
 package com.mdvns.mdvn.project.service;
 
-import org.springframework.http.ResponseEntity;
+import com.mdvns.mdvn.common.bean.RestResponse;
+import com.mdvns.mdvn.common.bean.UpdateBasicInfoRequest;
+import com.mdvns.mdvn.common.bean.UpdateStatusRequest;
+import com.mdvns.mdvn.common.exception.BusinessException;
+import com.mdvns.mdvn.project.domain.UpdateOtherInfoRequest;
 
 public interface UpdateService {
-    ResponseEntity<?> status(Integer status, Integer id);
+    //状态更新
+    RestResponse<?> updateStatus(UpdateStatusRequest updateStatusRequest);
+    //更新名称和描述
+    RestResponse<?> updateBasicInfo(UpdateBasicInfoRequest updateNameAndDescRequest);
+    //更新其他信息
+    RestResponse<?> updateOtherInfo(UpdateOtherInfoRequest updateRequest) throws BusinessException;
 }

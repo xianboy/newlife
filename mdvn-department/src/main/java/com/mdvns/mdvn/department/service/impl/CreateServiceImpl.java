@@ -3,29 +3,39 @@ package com.mdvns.mdvn.department.service.impl;
 import com.mdvns.mdvn.common.bean.RestResponse;
 import com.mdvns.mdvn.common.constant.MdvnConstant;
 import com.mdvns.mdvn.common.exception.BusinessException;
-import com.mdvns.mdvn.common.exception.ErrorEnum;
+import com.mdvns.mdvn.common.util.MdvnCommonUtil;
 import com.mdvns.mdvn.common.util.RestResponseUtil;
 import com.mdvns.mdvn.department.domain.CreateDeptRequest;
+import com.mdvns.mdvn.department.domain.DepartmentDetail;
 import com.mdvns.mdvn.department.domain.entity.Department;
+import com.mdvns.mdvn.department.domain.entity.Position;
 import com.mdvns.mdvn.department.repository.DeptRepository;
+import com.mdvns.mdvn.department.repository.PositionRepository;
 import com.mdvns.mdvn.department.service.CreateService;
 import com.mdvns.mdvn.department.uitil.DepartmentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 
 @Service
 public class CreateServiceImpl implements CreateService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CreateServiceImpl.class);
 
+    /*注入部门repository*/
     @Autowired
     private DeptRepository deptRepository;
-
+    /*注入职位repository*/
+    @Autowired
+    private PositionRepository positionRepository;
 
     /**
      * 新建部门
@@ -35,45 +45,54 @@ public class CreateServiceImpl implements CreateService {
      */
     @Override
     public RestResponse<?> create(CreateDeptRequest createRequest) throws BusinessException {
-        if (nameExists(createRequest.getName())) {
-            LOG.error("名称为：[ {} ] 的部门已存在", createRequest.getName());
-            throw new BusinessException(ErrorEnum.EXISTED, "名称为：[ "+createRequest.getName()+" ] 的部门已存在");
+        String name = createRequest.getName();
+        Department dept;
+        //根据name查询
+        dept = this.deptRepository.findByName(name);
+        //如果给定name的数据已存在,抛出异常
+        MdvnCommonUtil.exists(dept, "name", name);
+        //saveAndBuildDetail(createRequest);
+        //根据request构建department
+        dept = buildDepartmentByRequest(createRequest);
+        //构建部门职位
+        if (!(createRequest.getPositions().isEmpty())) {
+            StringBuilder stringBuilder = buildDeptPosition(createRequest.getCreatorId(), createRequest.getPositions());
+            dept.setPositions(stringBuilder.toString());
         }
-        //构建department对象并保存
-        Department dept = this.deptRepository.save(buildDepartmentByRequest(createRequest));
+        //保存dept
+        dept = this.deptRepository.saveAndFlush(dept);
         //构建response
-        return RestResponseUtil.success2(DepartmentUtil.buildDetailByDepartment(dept));
+        return RestResponseUtil.success(DepartmentUtil.buildDetailByDepartment(dept, this.positionRepository));
     }
 
     /**
-     * 指定名称的部门是否已存在
-     *
-     * @param name
+     * 构建部门职位id字符串
+     * @param pNames
      * @return
      */
-    private Boolean nameExists(String name) {
-        Department dept = this.deptRepository.findByName(name);
-        if (null == dept) {
-            return false;
+    private StringBuilder buildDeptPosition(Long creatorId, List<String> pNames) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String pName : pNames) {
+            Position position = this.positionRepository.findByName(pName);
+            //如果Position不存在，保存
+            if (null == position) {
+                position = new Position();
+                //设置creatorId
+                position.setCreatorId(creatorId);
+                //设置name
+                position.setName(pName);
+                //设置创建时间
+                position.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                //是否已删除
+                position.setIsDeleted(MdvnConstant.ZERO);
+                //新建position
+                position = this.positionRepository.saveAndFlush(position);
+                stringBuilder.append(position.getId()).append(",");
+            }
         }
-        return true;
+        stringBuilder.deleteCharAt(stringBuilder.length() - MdvnConstant.ONE);
+        return stringBuilder;
     }
-
-    /**
-     * 保存position信息
-     * @param positionNames
-     *
-     *
-    private void savePosition(List<String> positionNames) {
-    for (String positionName:positionNames) {
-    Position p = this.positionRepository.findByName(positionName);
-    Position position = new Position(positionName);
-    positions.add(position);
-    }
-    positions = this.positionRepository.save(positions);
-
-    }*/
-
 
     /**
      * 根据createRequest构建department对象
@@ -93,20 +112,12 @@ public class CreateServiceImpl implements CreateService {
         dept.setCreateTime(new Timestamp(System.currentTimeMillis()));
         //是否已删除
         dept.setIsDeleted(MdvnConstant.ZERO);
-        //职位名称
-        List<String> positionNames = createRequest.getPositions();
-        if (!(null == positionNames || positionNames.isEmpty())) {
-            /*StringBuilder strBuilder = new StringBuilder();
-            Iterator<String> its = positionNames.iterator();
-            */
-            dept.setPositions(createRequest.getPositions().toString());
-        }
+
         return dept;
     }
 
     /**
      * 构建部门编号
-     *
      * @return
      */
     private String buildSerialNum4Dept() {

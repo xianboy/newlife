@@ -1,6 +1,6 @@
 package com.mdvns.mdvn.common.util;
 
-import com.mdvns.mdvn.common.bean.PageableCriteria;
+import com.mdvns.mdvn.common.bean.model.PageableCriteria;
 import com.mdvns.mdvn.common.constant.MdvnConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class PageableQueryUtil {
             throw new IllegalArgumentException("分页参数：page和size 不能为空且不能小于1!");
         }
         //排序字段
-        String[] defaultSortBy = {MdvnConstant.CONSTANT_ID};
+        String[] defaultSortBy = {MdvnConstant.ID};
         List<String> sortBy = pageableCriteria.getSortBy();
         if (null == sortBy || sortBy.isEmpty()) {
             sortBy = Arrays.asList(defaultSortBy);
@@ -51,8 +51,8 @@ public class PageableQueryUtil {
      * 构建默认分页查询参数对象
      * @return
      */
-    private static PageRequest defaultPageReqestBuilder() {
-        return new PageRequest(MdvnConstant.ONE, MdvnConstant.TEN, new Sort(Sort.Direction.ASC, MdvnConstant.CONSTANT_ID));
+    public static PageRequest defaultPageReqestBuilder() {
+        return new PageRequest(MdvnConstant.ZERO, MdvnConstant.TEN, new Sort(Sort.Direction.ASC, MdvnConstant.ID));
     }
 
 }

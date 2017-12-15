@@ -19,10 +19,9 @@ import java.sql.Timestamp;
  * name不能重复
  */
 @Entity
-@Component
-@Table(name = "tag", uniqueConstraints = {@UniqueConstraint(columnNames ={"name"})})
 @Data
 @NoArgsConstructor
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames ={"name"})})
 public class Tag implements Serializable{
     @Id
     @GeneratedValue

@@ -11,9 +11,7 @@ import com.mdvns.mdvn.staff.domain.LoginRequest;
 import com.mdvns.mdvn.staff.domain.StaffDetail;
 import com.mdvns.mdvn.staff.domain.UpdateStaffRequest;
 import com.mdvns.mdvn.staff.domain.entity.Staff;
-import com.mdvns.mdvn.staff.domain.entity.StaffTag;
 import com.mdvns.mdvn.staff.repository.StaffRepository;
-import com.mdvns.mdvn.staff.repository.StaffTagRepository;
 import com.mdvns.mdvn.staff.service.CreateService;
 import com.mdvns.mdvn.staff.service.StaffTagService;
 import com.mdvns.mdvn.staff.util.StaffUtil;
@@ -26,8 +24,6 @@ import org.springframework.util.StringUtils;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CreateServiceImpl implements CreateService {
@@ -43,8 +39,9 @@ public class CreateServiceImpl implements CreateService {
 
     /**
      * 登录
-     * @param loginRequest
-     * @return
+     *
+     * @param loginRequest request
+     * @return restResponse
      */
     @Override
     public RestResponse<?> login(LoginRequest loginRequest) throws BusinessException {
@@ -60,8 +57,9 @@ public class CreateServiceImpl implements CreateService {
 
     /**
      * 更新staff
-     * @param updateRequest
-     * @return
+     *
+     * @param updateRequest request
+     * @return restResponse
      */
     @Override
     @Transactional
@@ -71,7 +69,7 @@ public class CreateServiceImpl implements CreateService {
         //根据id查询staff
         Staff staff = this.staffRepository.findOne(id);
         //如果staff为空，抛出异常
-        MdvnCommonUtil.notExists(staff, "id", updateRequest.getId().toString());
+        MdvnCommonUtil.notExistingError(staff, "id", updateRequest.getId().toString());
         //根据updateRequest构建staff
         staff = buildStaffByUpdateRequest(staff, updateRequest);
         //保存
@@ -81,6 +79,7 @@ public class CreateServiceImpl implements CreateService {
 
     /**
      * 根据updateRequest构建staff
+     *
      * @param staff
      * @param updateRequest
      * @return
@@ -116,8 +115,9 @@ public class CreateServiceImpl implements CreateService {
 
     /**
      * 添加staff
-     * @param request
-     * @return
+     *
+     * @param request request
+     * @return restResponse
      */
     @Override
     @Transactional
@@ -126,17 +126,17 @@ public class CreateServiceImpl implements CreateService {
         String account = request.getAccount();
         Staff staff = this.staffRepository.findByAccount(account);
         //根据account查询, 如果用户已存在,抛出异常
-        MdvnCommonUtil.exists(staff, "account", account);
+        MdvnCommonUtil.existingError(staff, "account", account);
         //根据createStaffRequest构建staff对象
         staff = buildStaffByRequest(request);
-        LOG.info("要保存的staff:{}",staff.toString());
+        LOG.info("要保存的staff:{}", staff.toString());
         //保存staff
         staff = this.staffRepository.saveAndFlush(staff);
         //用户保存成功后, 添加标签映射
         Long staffId = staff.getId();
         LOG.info("保存后staff的Id：{}", staff.getId());
-        if (!(null==request.getTags()||request.getTags().isEmpty())) {
-            List<StaffTag> staffTags = this.staffTagService.createStaffTag(staffId, request.getTags(), request.getCreatorId());
+        if (!(null == request.getTags() || request.getTags().isEmpty())) {
+            this.staffTagService.createStaffTag(staffId, request.getTags(), request.getCreatorId());
         }
         //根据Staff构建StaffResponse
         StaffDetail staffDetail = StaffUtil.buildDetailByStaff(staff);
@@ -145,8 +145,9 @@ public class CreateServiceImpl implements CreateService {
 
     /**
      * 根据createStaffRequest 构建Staff
-     * @param request
-     * @return
+     *
+     * @param request request
+     * @return staff
      */
     private Staff buildStaffByRequest(CreateStaffRequest request) {
         Staff staff = new Staff();
@@ -165,19 +166,19 @@ public class CreateServiceImpl implements CreateService {
         //设置添加人
         staff.setCreatorId(request.getCreatorId());
         //设置职位id
-        if (null!=request.getPositionId()) {
+        if (null != request.getPositionId()) {
             staff.setPositionId(request.getPositionId());
         }
         //设置职级
-        if (null!=request.getPositionLvl()) {
+        if (null != request.getPositionLvl()) {
             staff.setPositionLvl(request.getPositionLvl());
         }
         //设置邮箱
-        if (null!=request.getEmail()) {
+        if (null != request.getEmail()) {
             staff.setEmail(request.getEmail());
         }
         //设置手机号
-        if (null!=request.getMobile()) {
+        if (null != request.getMobile()) {
             staff.setMobile(request.getMobile());
         }
         //设置性别
@@ -191,6 +192,7 @@ public class CreateServiceImpl implements CreateService {
 
     /**
      * 构建员工编号
+     *
      * @return
      */
     private String buildSerialNum4Staff() {
@@ -201,7 +203,7 @@ public class CreateServiceImpl implements CreateService {
             maxId = 0L;
         }
         maxId += MdvnConstant.ONE;
-        return MdvnConstant.CONSTANT_E + maxId;
+        return MdvnConstant.E + maxId;
     }
 
 

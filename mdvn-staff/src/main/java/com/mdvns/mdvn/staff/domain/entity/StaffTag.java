@@ -1,64 +1,35 @@
 package com.mdvns.mdvn.staff.domain.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.sql.Timestamp;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class StaffTag {
 
     @Id
     @GeneratedValue
-    private Integer uuId;
-
-    private String staffId;
-
-    private String tagId;
-
+    private Long id;
+    /*创建人id*/
+    @Column(nullable = false)
+    private Long creatorId;
+    /*staffId*/
+    @Column(nullable = false)
+    private Long staffId;
+    /*标签Id*/
+    private Long tagId;
+    /*是否已删除*/
     private Integer isDeleted;
-
+    /*最后更新时间*/
     private Timestamp lastUpdateTime;
-
-    public Timestamp getLastUpdateTime() {
-        return lastUpdateTime;
-    }
-
-    public void setLastUpdateTime(Timestamp lastUpdateTime) {
-        this.lastUpdateTime = lastUpdateTime;
-    }
-
-    public Integer getUuId() {
-        return uuId;
-    }
-
-    public void setUuId(Integer uuId) {
-        this.uuId = uuId;
-    }
-
-    public String getStaffId() {
-        return staffId;
-    }
-
-    public void setStaffId(String staffId) {
-        this.staffId = staffId;
-    }
-
-    public String getTagId() {
-        return tagId;
-    }
-
-    public void setTagId(String tagId) {
-        this.tagId = tagId;
-    }
-
-    public Integer getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Integer isDeleted) {
-        this.isDeleted = isDeleted;
-    }
+    /*创建时间*/
+    private Timestamp createTime;
 }

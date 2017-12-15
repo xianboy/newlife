@@ -2,7 +2,7 @@ package com.mdvns.mdvn.department.web;
 
 import com.mdvns.mdvn.common.bean.PageableQueryWithoutArgRequest;
 import com.mdvns.mdvn.common.bean.RestResponse;
-import com.mdvns.mdvn.common.bean.RetrieveDetailRequest;
+import com.mdvns.mdvn.common.bean.SingleCriterionRequest;
 import com.mdvns.mdvn.common.exception.BusinessException;
 import com.mdvns.mdvn.common.util.BindingResultUtil;
 import com.mdvns.mdvn.department.service.RetrieveService;
@@ -21,14 +21,14 @@ public class RetrieveController {
 
     /**
      * 查询部门列表:支持分页
-     * @param pageableCriteria
+     * @param pageableQueryWithoutArgRequest
      * @param bindingResult
      * @return
      */
-    @PostMapping(value = "/")
-    public RestResponse<?> retrieve(@RequestBody @Validated PageableQueryWithoutArgRequest pageableQueryWithoutArgRequest, BindingResult bindingResult) {
+    @PostMapping(value = "/retrieveAll")
+    public RestResponse<?> retrieveAll(@RequestBody @Validated PageableQueryWithoutArgRequest pageableQueryWithoutArgRequest, BindingResult bindingResult) {
         BindingResultUtil.brResolve(bindingResult);
-        return this.retrieveService.findAll(pageableQueryWithoutArgRequest);
+        return this.retrieveService.retrieveAll(pageableQueryWithoutArgRequest);
     }
 
     /**
@@ -37,9 +37,21 @@ public class RetrieveController {
      * @param bindingResult
      * @return
      */
-    @PostMapping(value = "/dept")
-    public RestResponse<?> retrieveDeatil(@RequestBody @Validated RetrieveDetailRequest retrieveDetailRequest, BindingResult bindingResult) throws BusinessException {
+    @PostMapping(value = "/retrieveById")
+    public RestResponse<?> retrieveDeatilById(@RequestBody @Validated SingleCriterionRequest retrieveDetailRequest, BindingResult bindingResult) throws BusinessException {
         BindingResultUtil.brResolve(bindingResult);
-        return this.retrieveService.retrieveDetail(retrieveDetailRequest);
+        return this.retrieveService.retrieveDetailById(retrieveDetailRequest);
+    }
+
+    /**
+     * 获取指定name的部门详情
+     * @param retrieveDetailRequest
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping(value = "/retrieveByName")
+    public RestResponse<?> retrieveDeatilByName(@RequestBody @Validated SingleCriterionRequest retrieveDetailRequest, BindingResult bindingResult) throws BusinessException {
+        BindingResultUtil.brResolve(bindingResult);
+        return this.retrieveService.retrieveDetailByName(retrieveDetailRequest);
     }
 }

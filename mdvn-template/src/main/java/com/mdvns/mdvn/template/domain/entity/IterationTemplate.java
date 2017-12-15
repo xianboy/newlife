@@ -28,9 +28,6 @@ public class IterationTemplate {
     @Min(value = 1, message = "id的值不能小于1")
     private Long creatorId;
 
-    /*标签编号*/
-    private String serialNo;
-
     /*标签名称*/
     @NotBlank(message = "标签名称不能为空")
     @Column(nullable = false)
@@ -39,8 +36,6 @@ public class IterationTemplate {
     /*被引用的次数*/
     private Integer quoteCnt = MdvnConstant.ZERO;
 
-    /*色值：由于移动端还在使用，暂时保留*/
-    private String color;
 
     /*标签创建时间*/
     @Column(name = "create_time", columnDefinition = "timestamp default current_timestamp", nullable = false)
@@ -54,4 +49,7 @@ public class IterationTemplate {
     /*是否已删除*/
     @JsonIgnore
     private Integer isDeleted = MdvnConstant.ZERO;
+
+    /*模板id*/
+    private Long templateId;
 }

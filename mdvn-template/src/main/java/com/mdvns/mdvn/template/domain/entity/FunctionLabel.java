@@ -1,5 +1,6 @@
 package com.mdvns.mdvn.template.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mdvns.mdvn.common.constant.MdvnConstant;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,9 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ *
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -26,36 +30,25 @@ public class FunctionLabel {
     @Column(nullable = false)
     private Long creatorId;
 
+    /*label所属对象的编号(如果是FunctionLabel,则是id)*/
+    @NotBlank(message = "hostSerialNo不能为空")
+    private String hostSerialNo;
+
     /*名称*/
     @NotBlank(message = "名称不能为空")
     @Column(nullable = false)
     private String name;
 
-    /*编号*/
-    @Column(nullable = false)
-    private String serialNo;
-
-    /*父级id*/
-    @Min(value = 1, message = "id不能小于1")
-    private Long parentId;
-
-    /*子级id*/
-    @Min(value = 1, message = "id不能小于1")
-    private Long subitemId;
-
     /*创建时间*/
-    @Column(nullable = false)
+    @Column(columnDefinition = "timestamp", nullable = false)
     private Timestamp createTime = new Timestamp(System.currentTimeMillis());
 
     /*是否已删除*/
+    @JsonIgnore
     private Integer isDeleted = MdvnConstant.ZERO;
 
-    /*子模块id*/
-    private String subLabels;
-
     /*子模块名称*/
-    @Transient
-    private List<String> subLabelNames;
-
+    @Transient//非持久化字段
+    private List<String> subLabels;
 
 }

@@ -4,7 +4,6 @@ import com.mdvns.mdvn.common.constant.MdvnConstant;
 import com.mdvns.mdvn.template.domain.entity.Deliverable;
 import com.mdvns.mdvn.template.domain.entity.FunctionLabel;
 import com.mdvns.mdvn.template.domain.entity.IterationTemplate;
-import com.mdvns.mdvn.template.domain.entity.TemplateRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotBlank;
@@ -38,14 +37,16 @@ public class CreateTemplateRequest {
 
     //过程方法模块
     @NotEmpty(message = "如果要添加FunctionLabel, labels必须有元素")
+    @NotNull(message = "labels不能为空")
     private List<FunctionLabel> labels;
 
     /*模板角色*/
-    @NotEmpty(message = "TemplateRoles, roles必须有元素")
-    private List<TemplateRole> roles;
+    @NotEmpty(message = "如果要添加role, roleNames必须有元素")
+    private List<String> roleNames;
 
     /*迭代模板*/
     @NotEmpty(message = "如果要添加IterationTemplate, itTemplates必须有元素")
+    @NotNull(message = "itTemplates不能为空")
     private List<IterationTemplate> itTemplates;
 
     /*交付件*/

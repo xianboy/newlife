@@ -1,5 +1,6 @@
 package com.mdvns.mdvn.common.bean;
 
+import com.mdvns.mdvn.common.bean.model.PageableCriteria;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,4 +18,5 @@ public class PageableQueryWithoutArgRequest {
 
     /*分页参数对象*/
     private PageableCriteria pageableCriteria;
+
 }

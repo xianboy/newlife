@@ -1,10 +1,9 @@
 package com.mdvns.mdvn.department.domain.entity;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,12 +16,10 @@ public class Position {
     @Id
     @GeneratedValue
     private Long id;
-    /*部门id*/
-    @Column(nullable = false)
-    private Long deptId;
     /*职位名称*/
     private String name;
     /*是否已删除*/
+    @JsonIgnore
     private Integer isDeleted;
     /*创建人id*/
     private Long creatorId;
