@@ -1,9 +1,7 @@
 package com.mdvns.mdvn.template.web;
 
-import com.mdvns.mdvn.common.bean.PageableQueryWithoutArgRequest;
-import com.mdvns.mdvn.common.bean.RestResponse;
-import com.mdvns.mdvn.common.bean.RetrieveBaseInfoRequest;
-import com.mdvns.mdvn.common.bean.SingleCriterionRequest;
+import com.mdvns.mdvn.common.bean.*;
+import com.mdvns.mdvn.common.exception.BusinessException;
 import com.mdvns.mdvn.common.util.BindingResultUtil;
 import com.mdvns.mdvn.template.service.RetrieveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +69,21 @@ public class RetrieveController {
      * @return restResponse
      */
     @PostMapping(value = "/retrieveLabel")
-    public RestResponse<?> retrieveLabel(@RequestBody @Validated RetrieveBaseInfoRequest retrieveBaseInfoRequest, BindingResult bindingResult) {
+    public RestResponse<?> retrieveLabel(@RequestBody @Validated RetrieveBaseInfoRequest retrieveBaseInfoRequest, BindingResult bindingResult) throws BusinessException {
         BindingResultUtil.brResolve(bindingResult);
         return this.retrieveService.retrieveLabel(retrieveBaseInfoRequest);
+    }
+
+    /**
+     * 根据name和hostSerialNo查询过程方法
+     * @param retrieveRequest request
+     * @param bindingResult bindingResult
+     * @return restResponse
+     */
+    @PostMapping(value = "/retrieveByNameAndHost")
+    public RestResponse<?> retrieveByNameAndHost(@RequestBody RetrieveByNameAndHostRequest retrieveRequest, BindingResult bindingResult) {
+        BindingResultUtil.brResolve(bindingResult);
+        return this.retrieveService.retrieveByNameAndHost(retrieveRequest);
     }
 
 }

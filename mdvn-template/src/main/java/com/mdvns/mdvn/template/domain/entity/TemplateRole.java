@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"serialNo"})})
 public class TemplateRole implements Serializable {
 
     @Id
@@ -27,14 +27,18 @@ public class TemplateRole implements Serializable {
     @Column(nullable = false)
     private Long creatorId;
 
+    /*编号*/
+    @Column(nullable = false)
+    private String serialNo;
+
+    /*上层关联主体编号*/
+    @Column(nullable = false)
+    private String hostSerialNo;
+
     /*名称*/
     @NotBlank(message = "名称不能为空")
     @Column(nullable = false)
     private String name;
-
-    /*编号*/
-    @Column(nullable = false)
-    private String serialNo;
 
     /*创建时间*/
     @Column(nullable = false)

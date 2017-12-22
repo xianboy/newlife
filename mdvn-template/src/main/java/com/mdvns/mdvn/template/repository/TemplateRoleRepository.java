@@ -9,10 +9,13 @@ import java.util.List;
 
 @Repository
 public interface TemplateRoleRepository extends JpaRepository<TemplateRole, Long> {
+    //查询id的最大值
+    @Query(value = "select max(id) from TemplateRole", nativeQuery = true)
+    Long getMaxId();
 
-    //查询指定id集合的id和name
-    @Query("select t.id, t.name from Template t where t.id in ?1")
-    List<Object[]> findIdAndNameById(List<Long> ids);
+    //查询指定id集合的terseInfo
+    @Query("select t.id, t.serialNo, t.name from TemplateRole t where t.id in ?1")
+    List<Object[]> findTerseInfoById(List<Long> ids);
 
 
 }

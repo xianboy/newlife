@@ -1,6 +1,7 @@
 package com.mdvns.mdvn.template.service;
 
 import com.mdvns.mdvn.common.bean.*;
+import com.mdvns.mdvn.common.exception.BusinessException;
 
 public interface RetrieveService {
     //根据industryId查询模板
@@ -16,5 +17,8 @@ public interface RetrieveService {
     RestResponse<?> retrieveRoleBaseInfo(RetrieveBaseInfoRequest retrieveBaseInfoRequest);
 
     //根据id集合查询FunctionLabel的基本信息
-    RestResponse<?> retrieveLabel(RetrieveBaseInfoRequest retrieveBaseInfoRequest);
+    RestResponse<?> retrieveLabel(RetrieveBaseInfoRequest retrieveBaseInfoRequest) throws BusinessException;
+
+    //根据name和hostSerialNo查询过程方法
+    RestResponse<?> retrieveByNameAndHost(RetrieveByNameAndHostRequest retrieveRequest);
 }

@@ -20,7 +20,7 @@ public interface RequirementRepository extends JpaRepository<Requirement, Long> 
     //跟新状态
     @Modifying
     @Query("update Requirement r set r.status = ?1 where r.id = ?2")
-    Requirement updateStatus(String status, Long hostId);
+    Requirement updateStatus(String status, Long id);
 
     //修改描述
     @Modifying

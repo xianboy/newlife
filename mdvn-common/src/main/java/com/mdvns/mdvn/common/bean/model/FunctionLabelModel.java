@@ -7,11 +7,12 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class FunctionLabelModel {
+public class FunctionLabelModel implements Serializable {
 
     private Long id;
 

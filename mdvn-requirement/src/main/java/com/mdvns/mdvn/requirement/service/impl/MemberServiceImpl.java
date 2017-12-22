@@ -18,9 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -36,9 +34,9 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 保存需求成员映射
      *
-     * @param creatorId
-     * @param requirementId
-     * @param members
+     * @param creatorId creatorId
+     * @param requirementId requirementId
+     * @param members members
      */
     @Override
     public Integer handleMembers(Long creatorId, Long requirementId, List<MemberRequest> members) {
@@ -54,11 +52,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     *保存角色成员映射
-     * @param creatorId creatorId
+     * 保存角色成员映射
+     *
+     * @param creatorId     creatorId
      * @param requirementId requirementId
-     * @param roleId roleId
-     * @param memberSet memberSet
+     * @param roleId        roleId
+     * @param memberSet     memberSet
      */
     private void saveRoleMembers(Long creatorId, Long requirementId, Long roleId, List<Long> memberSet) {
         for (Long memberId : memberSet) {
@@ -78,13 +77,14 @@ public class MemberServiceImpl implements MemberService {
      * @param requirementId requirementId
      * @return list
      */
+    @Override
     public List<RoleMember> getRoleMembers(Long staffId, Long requirementId) throws BusinessException {
         //查询指定requirement的所有角色id
         List<Long> roles = this.memberRepository.findRoleIdDistinctByRequirementId(requirementId);
         //获取角色id和name
         List<TerseInfo> tmplRoles = getRoles(staffId, roles);
         //如果角色信息为空, 抛出异常
-        if (null == tmplRoles || tmplRoles.isEmpty()) {
+        if (tmplRoles.isEmpty()) {
             LOG.error("角色信息不存在...");
             throw new BusinessException(ErrorEnum.TEMPLATE_ROLE_NOT_EXISTS, "模板角色不存在...");
         }
@@ -137,10 +137,11 @@ public class MemberServiceImpl implements MemberService {
 
     /**
      * 添加指定角色的成员映射
-     * @param staffId staffId
+     *
+     * @param staffId       staffId
      * @param requirementId requirementId
-     * @param roleId roleId
-     * @param addList addList
+     * @param roleId        roleId
+     * @param addList       addList
      */
     private void updateMembers(Long staffId, Long requirementId, Long roleId, List<Long> addList) {
         List<Long> addMembers = new ArrayList<>();
@@ -156,20 +157,21 @@ public class MemberServiceImpl implements MemberService {
             }
         }
         //更新已存在映射的isDeleted为0
-        updateIsDeleted(requirementId,roleId, updateMembers, MdvnConstant.ZERO);
+        updateIsDeleted(requirementId, roleId, updateMembers, MdvnConstant.ZERO);
         //添加新映射
         saveRoleMembers(staffId, requirementId, roleId, addMembers);
     }
 
     /**
      * 修改角色成员映射
+     *
      * @param requirementId requirementId
-     * @param roleId roleId
+     * @param roleId        roleId
      * @param updateMembers updateMembers
-     * @param isDeleted zero
+     * @param isDeleted     zero
      */
     private void updateIsDeleted(Long requirementId, Long roleId, List<Long> updateMembers, Integer isDeleted) {
-        this.memberRepository.updateIsDeleted(requirementId,roleId,updateMembers,isDeleted);
+        this.memberRepository.updateIsDeleted(requirementId, roleId, updateMembers, isDeleted);
     }
 
     /**
@@ -192,10 +194,10 @@ public class MemberServiceImpl implements MemberService {
      * @param staffId       staffId
      * @param requirementId requirementId
      * @param roleId        roleId
-     * @return lsit
+     * @return list
      * @throws BusinessException exception
      */
-    public List<TerseInfo> getMembers(Long staffId, Long requirementId, Long roleId) throws BusinessException {
+    private List<TerseInfo> getMembers(Long staffId, Long requirementId, Long roleId) throws BusinessException {
         //获取成员id和name
         List<Long> ids = this.memberRepository.findMemberIdByRoleIdAndRequirementId(requirementId, roleId);
         //获取member的url

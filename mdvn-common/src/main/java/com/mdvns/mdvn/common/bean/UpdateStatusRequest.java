@@ -6,10 +6,11 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public class UpdateStatusRequest {
+public class UpdateStatusRequest implements Serializable {
 
     /*当前用户Id*/
     @NotNull(message = "用户Id不能为空")

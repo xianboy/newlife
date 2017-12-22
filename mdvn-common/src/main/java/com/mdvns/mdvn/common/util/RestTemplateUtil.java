@@ -2,6 +2,7 @@ package com.mdvns.mdvn.common.util;
 
 import com.mdvns.mdvn.common.bean.CustomFunctionLabelRequest;
 import com.mdvns.mdvn.common.bean.RetrieveBaseInfoRequest;
+import com.mdvns.mdvn.common.bean.RetrieveByNameAndHostRequest;
 import com.mdvns.mdvn.common.bean.model.TerseInfo;
 import com.mdvns.mdvn.common.bean.model.FunctionLabelModel;
 import com.mdvns.mdvn.common.bean.RestResponse;
@@ -32,6 +33,8 @@ public class RestTemplateUtil {
      * @return list
      */
     public static List<TerseInfo> retrieveBasicInfo(Long staffId, List<Long> ids, String url) throws BusinessException {
+        LOG.info("查询的id共【{}】个...", ids.size());
+        LOG.info("查询id和name的url是：【{}】", url);
         //实例化restTemplate对象
         RestTemplate restTemplate = new RestTemplate();
         //构建ParameterizedTypeReference
@@ -46,7 +49,7 @@ public class RestTemplateUtil {
         RestResponse<TerseInfo[]> restResponse = responseEntity.getBody();
         if (!MdvnConstant.SUCCESS_CODE.equals(restResponse.getCode())) {
             LOG.error("获取指定id集合的id和name失败.");
-            throw new BusinessException(ErrorEnum.GET_BASE_INFO_FAILD, "获取指定id集合的id和name失败.");
+            throw new BusinessException(ErrorEnum.GET_BASE_INFO_FAILED, "获取指定id集合的id和name失败.");
         }
         return Arrays.asList(restResponse.getData());
     }
@@ -78,4 +81,6 @@ public class RestTemplateUtil {
         FunctionLabelModel labelModel = restResponse.getData();
         return labelModel;
     }
+
+
 }

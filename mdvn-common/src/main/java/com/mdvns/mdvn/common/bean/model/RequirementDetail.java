@@ -3,11 +3,12 @@ package com.mdvns.mdvn.common.bean.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class RequirementDetail {
+public class RequirementDetail implements Serializable {
 
     private Long id;
 

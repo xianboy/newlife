@@ -2,9 +2,9 @@ package com.mdvns.mdvn.requirement.service;
 
 import com.mdvns.mdvn.common.bean.RestResponse;
 import com.mdvns.mdvn.common.bean.UpdateBasicInfoRequest;
+import com.mdvns.mdvn.common.bean.UpdateOtherInfoRequest;
 import com.mdvns.mdvn.common.bean.UpdateStatusRequest;
 import com.mdvns.mdvn.common.exception.BusinessException;
-import com.mdvns.mdvn.requirement.domain.UpdateOtherInfoRequest;
 
 public interface UpdateService {
     //状态更新

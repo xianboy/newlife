@@ -1,15 +1,18 @@
 package com.mdvns.mdvn.template.service.impl;
 
-import com.mdvns.mdvn.common.bean.PageableQueryWithoutArgRequest;
-import com.mdvns.mdvn.common.bean.RestResponse;
-import com.mdvns.mdvn.common.bean.RetrieveBaseInfoRequest;
-import com.mdvns.mdvn.common.bean.SingleCriterionRequest;
-import com.mdvns.mdvn.common.bean.model.TerseInfo;
+import com.mdvns.mdvn.common.bean.*;
 import com.mdvns.mdvn.common.bean.model.PageableCriteria;
+import com.mdvns.mdvn.common.bean.model.TerseInfo;
+import com.mdvns.mdvn.common.constant.MdvnConstant;
+import com.mdvns.mdvn.common.exception.BusinessException;
+import com.mdvns.mdvn.common.exception.ErrorEnum;
 import com.mdvns.mdvn.common.util.ConvertObjectUtil;
+import com.mdvns.mdvn.common.util.MdvnCommonUtil;
 import com.mdvns.mdvn.common.util.PageableQueryUtil;
 import com.mdvns.mdvn.common.util.RestResponseUtil;
+import com.mdvns.mdvn.template.domain.entity.FunctionLabel;
 import com.mdvns.mdvn.template.domain.entity.Template;
+import com.mdvns.mdvn.template.repository.LabelRepository;
 import com.mdvns.mdvn.template.repository.TemplateRepository;
 import com.mdvns.mdvn.template.repository.TemplateRoleRepository;
 import com.mdvns.mdvn.template.service.RetrieveService;
@@ -25,7 +28,7 @@ import java.util.List;
 @Service
 public class RetrieveServiceImpl implements RetrieveService {
 
-    public static final Logger LOG = LoggerFactory.getLogger(RetrieveServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RetrieveServiceImpl.class);
 
     @Resource
     private TemplateRepository templateRepository;
@@ -33,11 +36,13 @@ public class RetrieveServiceImpl implements RetrieveService {
     @Resource
     private TemplateRoleRepository roleRepository;
 
+    @Resource
+    private LabelRepository labelRepository;
 
     /**
      * 根据industryId查询模板
-     * @param criterionRequest
-     * @return
+     * @param criterionRequest request
+     * @return RestResponse
      */
     @Override
     public RestResponse<?> retrieveByIndustryId(SingleCriterionRequest criterionRequest) {
@@ -45,7 +50,7 @@ public class RetrieveServiceImpl implements RetrieveService {
         Long industryId = Long.valueOf(criterionRequest.getCriterion());
         //查询
         List<Object[]> resultSet = this.templateRepository.findByIndustryId(industryId);
-        List<TerseInfo> templates = ConvertObjectUtil.convertObjectArray2BaseInfo(resultSet);
+        List<TerseInfo> templates = ConvertObjectUtil.convertObjectArray2TerseInfo(resultSet);
         return RestResponseUtil.success(templates);
     }
 
@@ -74,46 +79,60 @@ public class RetrieveServiceImpl implements RetrieveService {
 
     /**
      * 根据指定id集合查询基本信息
-     * @param retrieveBaseInfoRequest request
+     * @param retrieveBaseInfoRequest retrieveBaseInfoRequest
      * @return restResponse
      */
     @Override
     public RestResponse<?> retrieveBaseInfo(RetrieveBaseInfoRequest retrieveBaseInfoRequest) {
         //根据request获取id集合
         List<Long> ids = retrieveBaseInfoRequest.getIds();
-        List<Object[]> resultSet = this.templateRepository.findIdAndNameById(ids);
-        List<TerseInfo> templates = ConvertObjectUtil.convertObjectArray2BaseInfo(resultSet);
+        List<Object[]> resultSet = this.templateRepository.findTerseInfoById(ids);
+        List<TerseInfo> templates = ConvertObjectUtil.convertObjectArray2TerseInfo(resultSet);
         return RestResponseUtil.success(templates);
     }
 
     /**
      * 根据指定id集合查询TemplateRole基本信息
-     * @param retrieveBaseInfoRequest request
+     * @param retrieveBaseInfoRequest retrieveBaseInfoRequest
      * @return restResponse
      */
     @Override
     public RestResponse<?> retrieveRoleBaseInfo(RetrieveBaseInfoRequest retrieveBaseInfoRequest) {
+        LOG.info("根据指定的id集合【{}】查询id和name开始...", retrieveBaseInfoRequest.getIds().toString());
         //根据request获取id集合
         List<Long> ids = retrieveBaseInfoRequest.getIds();
-        List<Object[]> resultSet = this.roleRepository.findIdAndNameById(ids);
-        List<TerseInfo> tmplRoles = ConvertObjectUtil.convertObjectArray2BaseInfo(resultSet);
+        List<Object[]> resultSet = this.roleRepository.findTerseInfoById(ids);
+        List<TerseInfo> tmplRoles = ConvertObjectUtil.convertObjectArray2TerseInfo(resultSet);
+        LOG.info("根据指定的id集合查询id和name成功.角色有【{}】.", tmplRoles.toString());
         return RestResponseUtil.success(tmplRoles);
     }
 
     /**
      * 根据id集合查询 FunctionLabel
-     * @param retrieveBaseInfoRequest request
+     * @param retrieveBaseInfoRequest retrieveBaseInfoRequest
      * @return restResponse
      */
     @Override
-    public RestResponse<?> retrieveLabel(RetrieveBaseInfoRequest retrieveBaseInfoRequest) {
+    public RestResponse<?> retrieveLabel(RetrieveBaseInfoRequest retrieveBaseInfoRequest) throws BusinessException {
         //根据request获取id集合
         List<Long> ids = retrieveBaseInfoRequest.getIds();
         //查询id和name
-        List<Object[]> resultSet = this.roleRepository.findIdAndNameById(ids);
+        List<Object[]> resultSet = this.labelRepository.findTerseInfoById(ids);
+        MdvnCommonUtil.emptyList(resultSet, ErrorEnum.FUNCTION_LABEL_NOT_EXISTS, "id为【"+ids.toString()+"】的functionLabel不存在...");
         //结果集转换
-        List<TerseInfo> tmplRoles = ConvertObjectUtil.convertObjectArray2BaseInfo(resultSet);
-        return RestResponseUtil.success(tmplRoles);
+        List<TerseInfo> labels = ConvertObjectUtil.convertObjectArray2TerseInfo(resultSet);
+        return RestResponseUtil.success(labels);
+    }
+
+    /**
+     * 根据name和hostSerialNo查询过程方法
+     * @param retrieveRequest request
+     * @return restResponse
+     */
+    @Override
+    public RestResponse<?> retrieveByNameAndHost(RetrieveByNameAndHostRequest retrieveRequest) {
+        List<FunctionLabel> functionLabels = this.labelRepository.findByHostSerialNoAndIsDeleted(retrieveRequest.getHostSerialNo(), MdvnConstant.ZERO);
+        return RestResponseUtil.success(functionLabels.get(MdvnConstant.ZERO));
     }
 
 

@@ -5,11 +5,12 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class MemberRequest {
+public class MemberRequest implements Serializable {
 
     /*模板角色id*/
     @NotNull(message = "tmplRoleId不能为空")

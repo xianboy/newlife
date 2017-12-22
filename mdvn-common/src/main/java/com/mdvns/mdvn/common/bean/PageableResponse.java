@@ -3,11 +3,12 @@ package com.mdvns.mdvn.common.bean;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class PageableResponse<T> {
+public class PageableResponse<T> implements Serializable {
 
     /*对象列表*/
     private List<T> content;

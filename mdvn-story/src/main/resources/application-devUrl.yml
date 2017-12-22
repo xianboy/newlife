@@ -5,4 +5,5 @@ url:
   retrieveMembersUrl : http://localhost:20001/mdvn-staff/staff/retrieveBaseInfo
   retrieveRoleUrl : http://localhost:20004/mdvn-template/templates/retrieveRoleBaseInfo
   retrieveLabelUrl : http://localhost:20004/mdvn-template/templates/retrieveLabel
+  retrieveLabelByNameAndHostUrl : http://localhost:20004/mdvn-template/templates/retrieveByNameAndHost
 

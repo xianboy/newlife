@@ -2,10 +2,10 @@ package com.mdvns.mdvn.requirement.web;
 
 import com.mdvns.mdvn.common.bean.RestResponse;
 import com.mdvns.mdvn.common.bean.UpdateBasicInfoRequest;
+import com.mdvns.mdvn.common.bean.UpdateOtherInfoRequest;
 import com.mdvns.mdvn.common.bean.UpdateStatusRequest;
 import com.mdvns.mdvn.common.exception.BusinessException;
 import com.mdvns.mdvn.common.util.BindingResultUtil;
-import com.mdvns.mdvn.requirement.domain.UpdateOtherInfoRequest;
 import com.mdvns.mdvn.requirement.service.UpdateService;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;

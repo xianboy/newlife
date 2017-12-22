@@ -13,11 +13,12 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- *
+ * 过程方法
  */
 @Entity
 @Data
 @NoArgsConstructor
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"serialNo"})})
 public class FunctionLabel {
 
     @Id
@@ -30,7 +31,11 @@ public class FunctionLabel {
     @Column(nullable = false)
     private Long creatorId;
 
-    /*label所属对象的编号(如果是FunctionLabel,则是id)*/
+    /*编号*/
+    @Column(nullable = false)
+    private String serialNo;
+
+    /*上层关联对象的编号*/
     @NotBlank(message = "hostSerialNo不能为空")
     private String hostSerialNo;
 

@@ -3,9 +3,11 @@ package com.mdvns.mdvn.common.bean.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
-public class StaffDetail {
+public class StaffDetail implements Serializable {
     //id
     private Long id;
     //员工编号

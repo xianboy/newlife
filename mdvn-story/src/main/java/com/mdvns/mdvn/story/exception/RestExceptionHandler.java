@@ -16,20 +16,18 @@ public class RestExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RestExceptionHandler.class);
 
-    //SAPI调用异常
-//    @ExceptionHandler(BusinessException.class)
     @ExceptionHandler(BusinessException.class)
     public RestResponse<?> businessExceptionHandler(BusinessException ex) {
-        LOG.error("Internal Server Error:{}", ex.getMessage());
-        return RestResponseUtil.error(ex.getCode(), ex.getLocalizedMessage());
+        LOG.error("BusinessException:{}", ex.getMsg());
+        return RestResponseUtil.error(ex.getCode(), ex.getMsg());
     }
 
-    //请求参数不正确：
+    /*//请求参数不正确：
     @ExceptionHandler(IllegalArgumentException.class)
     public RestResponse<?> illegalArgumentExceptionHandler(IllegalArgumentException ex) {
         LOG.error("请求参数不正确:{}", ex.getLocalizedMessage());
         return RestResponseUtil.error(ErrorEnum.ILLEGAL_ARG.getCode(), ex.getLocalizedMessage());
 
-    }
+    }*/
 
 }

@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
-public class TagModel {
+public class TagModel implements Serializable {
     /*标签id*/
     private Long id;
     /*标签编号*/

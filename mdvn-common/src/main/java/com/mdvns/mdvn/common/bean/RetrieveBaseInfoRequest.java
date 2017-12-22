@@ -7,12 +7,13 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RetrieveBaseInfoRequest {
+public class RetrieveBaseInfoRequest implements Serializable {
     /*当前用户Id*/
     @NotNull(message = "用户Id不能为空")
     @Min(value = 1, message = "用户Id不能小于1")

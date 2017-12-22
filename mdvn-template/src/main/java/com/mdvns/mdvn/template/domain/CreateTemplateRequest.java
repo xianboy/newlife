@@ -1,7 +1,7 @@
 package com.mdvns.mdvn.template.domain;
 
 import com.mdvns.mdvn.common.constant.MdvnConstant;
-import com.mdvns.mdvn.template.domain.entity.Deliverable;
+import com.mdvns.mdvn.template.domain.entity.Delivery;
 import com.mdvns.mdvn.template.domain.entity.FunctionLabel;
 import com.mdvns.mdvn.template.domain.entity.IterationTemplate;
 import lombok.Data;
@@ -51,7 +51,7 @@ public class CreateTemplateRequest {
 
     /*交付件*/
     @NotEmpty(message = "如果要添加Deliverable, deliverables必须有元素")
-    private List<Deliverable> deliverables;
+    private List<Delivery> deliverables;
 
 
 

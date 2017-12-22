@@ -2,6 +2,7 @@ package com.mdvns.mdvn.requirement.service;
 
 import com.mdvns.mdvn.common.bean.model.AddOrRemoveById;
 import com.mdvns.mdvn.requirement.domain.entity.RequirementTag;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface TagService {
     void updateTags(Long staffId, Long requirementId, AddOrRemoveById tags);
 
     //删除映射
+    @Modifying
     Integer updateIsDeleted(Long staffId, Long requirementId, List<Long> tags, Integer isDeleted);
 }
 

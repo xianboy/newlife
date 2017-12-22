@@ -5,10 +5,11 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public class UpdateBasicInfoRequest {
+public class UpdateBasicInfoRequest implements Serializable {
 
     /*当前用户Id*/
     @NotNull(message = "用户Id不能为空")

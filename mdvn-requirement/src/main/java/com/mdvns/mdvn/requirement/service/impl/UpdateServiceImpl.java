@@ -2,17 +2,20 @@ package com.mdvns.mdvn.requirement.service.impl;
 
 import com.mdvns.mdvn.common.bean.RestResponse;
 import com.mdvns.mdvn.common.bean.UpdateBasicInfoRequest;
+import com.mdvns.mdvn.common.bean.UpdateOtherInfoRequest;
 import com.mdvns.mdvn.common.bean.UpdateStatusRequest;
 import com.mdvns.mdvn.common.exception.BusinessException;
 import com.mdvns.mdvn.common.exception.ErrorEnum;
 import com.mdvns.mdvn.common.util.MdvnCommonUtil;
 import com.mdvns.mdvn.common.util.RestResponseUtil;
-import com.mdvns.mdvn.requirement.domain.UpdateOtherInfoRequest;
 import com.mdvns.mdvn.requirement.domain.entity.Requirement;
 import com.mdvns.mdvn.requirement.repository.RequirementRepository;
 import com.mdvns.mdvn.requirement.service.MemberService;
+import com.mdvns.mdvn.requirement.service.RetrieveService;
 import com.mdvns.mdvn.requirement.service.TagService;
 import com.mdvns.mdvn.requirement.service.UpdateService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +24,10 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 
 @Service
+@Transactional
 public class UpdateServiceImpl implements UpdateService {
+    private static final Logger LOG = LoggerFactory.getLogger(UpdateServiceImpl.class);
+
 
     @Resource
     private RequirementRepository requirementRepository;
@@ -32,6 +38,9 @@ public class UpdateServiceImpl implements UpdateService {
     @Resource
     private MemberService memberService;
 
+    @Resource
+    private RetrieveService retrieveService;
+
     /**
      * 更新状态
      *
@@ -40,11 +49,12 @@ public class UpdateServiceImpl implements UpdateService {
      */
     @Override
     @Modifying
-    @Transactional
     public RestResponse<?> updateStatus(UpdateStatusRequest updateStatusRequest) {
+        LOG.info("修改状态开始...");
         //更新项目状态
         Requirement requirement = this.requirementRepository.updateStatus(updateStatusRequest.getStatus(), updateStatusRequest.getHostId());
         //构建response并返回
+        LOG.info("修改状态成功...");
         return RestResponseUtil.success(requirement.getStatus());
     }
 
@@ -55,10 +65,9 @@ public class UpdateServiceImpl implements UpdateService {
      * @return 更新数据条数
      */
     @Override
-    @Transactional
     @Modifying
     public RestResponse<?> updateBasicInfo(UpdateBasicInfoRequest updateBasicInfoRequest) {
-
+        LOG.info("修改基础信息开始...");
         //获取更新对象的id
         Long requirementId = updateBasicInfoRequest.getHostId();
         //获取summary和desc
@@ -75,6 +84,7 @@ public class UpdateServiceImpl implements UpdateService {
             //如果都不为空, 同时更新名称和描述
             updated = this.requirementRepository.updateBoth(summary, desc, requirementId);
         }
+        LOG.info("修改基础信息成功...");
         return RestResponseUtil.success(updated);
     }
 
@@ -89,9 +99,7 @@ public class UpdateServiceImpl implements UpdateService {
     public RestResponse<?> updateOtherInfo(UpdateOtherInfoRequest updateRequest) throws BusinessException {
         //根据request构建project对象
         Requirement requirement = buildByRequest(updateRequest);
-
-
-        return null;
+        return RestResponseUtil.success(requirement);
     }
 
     /**
@@ -102,7 +110,7 @@ public class UpdateServiceImpl implements UpdateService {
      */
     private Requirement buildByRequest(UpdateOtherInfoRequest updateRequest) throws BusinessException {
         //需求id
-        Long requirementId = updateRequest.getRequirementId();
+        Long requirementId = updateRequest.getHostId();
         //根据id查询项目
         Requirement requirement = this.requirementRepository.findOne(requirementId);
         //如果requirement不存在, 抛出异常
@@ -128,7 +136,6 @@ public class UpdateServiceImpl implements UpdateService {
         if (null != updateRequest.getRoleMembers()) {
             this.memberService.updateRoleMembers(updateRequest.getStaffId(), requirementId, updateRequest.getRoleMembers());
         }
-
         return requirement;
     }
 

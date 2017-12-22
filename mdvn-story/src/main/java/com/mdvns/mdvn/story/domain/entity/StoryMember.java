@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -16,7 +17,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
-public class StoryMember {
+public class StoryMember implements Serializable {
     @Id
     @GeneratedValue
     private Long id;

@@ -21,7 +21,8 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
 
 //    List<Object[]> findIdAndNameByIndustryId(Long industryId);
 
-    @Query("select t.id, t.name from Template t where t.id in ?1")
-    List<Object[]> findIdAndNameById(List<Long> ids);
+    //查询terseInfo
+    @Query("select t.id, t.serialNo, t.name from Template t where t.id in ?1")
+    List<Object[]> findTerseInfoById(List<Long> ids);
 
 }

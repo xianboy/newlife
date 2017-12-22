@@ -6,10 +6,11 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public class PageableQueryWithoutArgRequest {
+public class PageableQueryWithoutArgRequest implements Serializable {
 
     /*查询者Id*/
     @NotNull(message = "staffId不能为空")

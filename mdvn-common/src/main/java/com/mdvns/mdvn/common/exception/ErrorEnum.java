@@ -25,7 +25,7 @@ public enum ErrorEnum {
     /*数据已存在*/
     EXISTED("558"),
     /*获取id和name失败*/
-    GET_BASE_INFO_FAILD("559"),
+    GET_BASE_INFO_FAILED("559"),
 
 
     //staff
@@ -40,6 +40,7 @@ public enum ErrorEnum {
 
     //template
     /*新建模板时, 子过程方法不能为空*/
+    TEMPLATE_SYSTEM_ERROR("30500"),
     SUB_LABEL_IS_NULL("30400"),
     /*自定义过程方法失败*/
     CUSTOM_LABEL_FAILD("30401"),
@@ -49,9 +50,16 @@ public enum ErrorEnum {
     FUNCTION_LABEL_NOT_EXISTS("30403"),
 
     //requirement
-    //需求对象不存在
-    REQUIREMENT_NOT_EXISTS("30600")
+    /*需求对象不存在*/
+    REQUIREMENT_NOT_EXISTS("30600"),
 
+    //story
+    /*story不存在*/
+    STORY_NOT_EXISTS("30700"),
+
+    //task
+    /*task不存在*/
+    TASK_NOT_EXISTS("30800")
     ;
 
 

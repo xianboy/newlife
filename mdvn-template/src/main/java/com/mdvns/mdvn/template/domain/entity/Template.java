@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name","serialNo"})})
 public class Template {
 
     @Id

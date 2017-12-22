@@ -1,6 +1,11 @@
 package com.mdvns.mdvn.tag.service.impl;
 
-import com.mdvns.mdvn.common.bean.*;
+import com.mdvns.mdvn.common.bean.PageableQueryWithoutArgRequest;
+import com.mdvns.mdvn.common.bean.RestResponse;
+import com.mdvns.mdvn.common.bean.RetrieveBaseInfoRequest;
+import com.mdvns.mdvn.common.bean.SingleCriterionRequest;
+import com.mdvns.mdvn.common.bean.model.PageableCriteria;
+import com.mdvns.mdvn.common.bean.model.TerseInfo;
 import com.mdvns.mdvn.common.constant.MdvnConstant;
 import com.mdvns.mdvn.common.exception.BusinessException;
 import com.mdvns.mdvn.common.util.ConvertObjectUtil;
@@ -12,12 +17,12 @@ import com.mdvns.mdvn.tag.repository.TagRepository;
 import com.mdvns.mdvn.tag.service.TagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +31,7 @@ public class TagServiceImpl implements TagService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TagServiceImpl.class);
 
-    @Autowired
+    @Resource
     private TagRepository tagRepository;
 
     /**
@@ -55,7 +60,7 @@ public class TagServiceImpl implements TagService {
 
     /**
      * 查询所有数据：支持分页
-     * @return
+     * @return restResponse
      */
     @Override
     @Transactional
@@ -78,8 +83,8 @@ public class TagServiceImpl implements TagService {
 
     /**
      * 获取指定name的部门详情
-     * @param retrieveDetailRequest
-     * @return
+     * @param retrieveDetailRequest request
+     * @return restResponse
      */
     @Override
     @Transactional
@@ -98,21 +103,21 @@ public class TagServiceImpl implements TagService {
 
     /**
      * 获取指定id集合的标签基本信息
-     * @param retrieveBaseInfoRequest
-     * @return
+     * @param retrieveBaseInfoRequest request
+     * @return restResponse
      */
     @Override
     public RestResponse<?> retrieveBaseInfo(RetrieveBaseInfoRequest retrieveBaseInfoRequest) {
         //根据request获取id集合
         List<Long> ids = retrieveBaseInfoRequest.getIds();
         List<Object[]> resultSet = this.tagRepository.findIdAndNameById(ids);
-        List<BaseInfo> tags = ConvertObjectUtil.convertObjectArray2BaseInfo(resultSet);
+        List<TerseInfo> tags = ConvertObjectUtil.convertObjectArray2BaseInfo(resultSet);
         return RestResponseUtil.success(tags);
     }
 
     /**
      * 构建编号
-     * @return
+     * @return String
      */
     private String buildSerialNo4Tag() {
         //查询表中的最大id  maxId
@@ -122,6 +127,6 @@ public class TagServiceImpl implements TagService {
             maxId = Long.valueOf(MdvnConstant.ZERO);
         }
         maxId += MdvnConstant.ONE;
-        return MdvnConstant.CONSTANT_T + maxId;
+        return MdvnConstant.T + maxId;
     }
 }

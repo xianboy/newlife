@@ -3,11 +3,12 @@ package com.mdvns.mdvn.common.bean.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ProjectDetail {
+public class ProjectDetail implements Serializable {
     /*项目id*/
     private Long id;
     /*项目编号: Pxx*/

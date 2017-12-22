@@ -7,6 +7,7 @@ import com.mdvns.mdvn.common.constant.MdvnConstant;
 import com.mdvns.mdvn.common.exception.BusinessException;
 import com.mdvns.mdvn.common.util.RestResponseUtil;
 import com.mdvns.mdvn.common.util.RestTemplateUtil;
+import com.mdvns.mdvn.story.config.WebConfig;
 import com.mdvns.mdvn.story.domain.CreateStoryRequest;
 import com.mdvns.mdvn.story.domain.entity.Story;
 import com.mdvns.mdvn.story.repository.StoryRepository;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.sql.Timestamp;
 
 @Service
 public class CreateServiceImpl implements CreateService {
@@ -34,11 +34,13 @@ public class CreateServiceImpl implements CreateService {
     @Resource
     private TagService tagService;
 
+    @Resource
+    private WebConfig webConfig;
 
     /**
      * 创建story
      *
-     * @param createRequest request
+     * @param createRequest createRequest
      * @return restResponse
      */
 
@@ -48,10 +50,7 @@ public class CreateServiceImpl implements CreateService {
         //根据request构建story对象
         Story story = buildByRequest(createRequest);
         LOG.info("Story 的编号为【{}】", story.getSerialNo());
-        if (true) {
-            throw new BusinessException("999", "测试...");
-        }
-        //调用repository保存requirement
+        //调用repository保存story
         story = this.repository.saveAndFlush(story);
         //story保存成功,保存成员映射
         Integer memberAmount = MdvnConstant.ZERO;
@@ -60,15 +59,14 @@ public class CreateServiceImpl implements CreateService {
         }
         //设置成员数量
         story.setMemberAmount(memberAmount);
-        //需求保存成功,保存需求标签映射
+        //保存成功,保存story标签映射
         if (!(null == createRequest.getTags() || createRequest.getTags().isEmpty())) {
             this.tagService.buildTags(createRequest.getCreatorId(), story.getId(), createRequest.getTags());
         }
 
-        LOG.debug("id为【{}】的需求创建成功...", story.getId());
+        LOG.debug("id为【{}】的story创建成功...", story.getId());
         return RestResponseUtil.success(story);
     }
-
 
     /**
      * 根据request构建Story对象
@@ -76,18 +74,18 @@ public class CreateServiceImpl implements CreateService {
      * @param request request
      * @return story
      */
-
-    private Story buildByRequest(CreateStoryRequest request) {
+    private Story buildByRequest(CreateStoryRequest request) throws BusinessException {
         Story story = new Story();
         story.setCreatorId(request.getCreatorId());
         story.setHostSerialNo(request.getHostSerialNo());
-        story.setSerialNo(buildSerialNo(request.getHostSerialNo()));
+        String serialNo = buildSerialNo();
+        story.setSerialNo(serialNo);
         story.setSummary(request.getSummary());
         story.setDescription(request.getDescription());
         story.setPriority(request.getPriority());
-//        story.setFunctionLabelId(buildLabel(request.getCreatorId(), request.getFunctionLabel()));
-        story.setStartDate(new Timestamp(request.getStartDate()));
-        story.setEndDate(new Timestamp(request.getEndDate()));
+        story.setFunctionLabelId(buildLabel(request.getCreatorId(), serialNo, request.getFunctionLabel()));
+        story.setStartDate(request.getStartDate());
+        story.setEndDate(request.getEndDate());
         story.setStoryPoint(request.getStoryPoint());
         return story;
     }
@@ -98,16 +96,13 @@ public class CreateServiceImpl implements CreateService {
         if (functionLabel instanceof Integer) {
             id = Long.valueOf((Integer) functionLabel);
         } else if (functionLabel instanceof String) {
-//            String customLabelUrl = webConfig.getCustomLabelUrl();
-            FunctionLabelModel labelModel = RestTemplateUtil.customLabel("", new CustomFunctionLabelRequest(creatorId, (String)functionLabel));
+            //自定义过程方法url
+            String customLabelUrl = webConfig.getCustomLabelUrl();
+            //调用template模块构建自定义过程方法
+            FunctionLabelModel labelModel = RestTemplateUtil.customLabel(customLabelUrl, new CustomFunctionLabelRequest(creatorId, hostSerialNo, (String) functionLabel));
             id = labelModel.getId();
         }
         return id;
-
-/*CustomFunctionLabelRequest customFunctionLabelRequest = new CustomFunctionLabelRequest();
-        customFunctionLabelRequest.setCreatorId(creatorId);
-        customFunctionLabelRequest.setHostSerialNo(hostSerialNo);*/
-
     }
 
 
@@ -116,11 +111,9 @@ public class CreateServiceImpl implements CreateService {
      * 1.查询表中的最大id  maxId
      * 2.serialNum = "R" + (maxId + 1)
      *
-     * @param hostSerialNo
      * @return serialNo
      */
-
-    private String buildSerialNo(String hostSerialNo) {
+    private String buildSerialNo() {
         //查询表中的最大id  maxId
         Long maxId = this.repository.getMaxId();
         //如果表中没有数据，则给maxId赋值为0
@@ -128,9 +121,7 @@ public class CreateServiceImpl implements CreateService {
             maxId = Long.valueOf(MdvnConstant.ZERO);
         }
         maxId += 1;
-        StringBuilder serialNo = new StringBuilder(hostSerialNo);
-        serialNo.append(MdvnConstant.DASH).append(MdvnConstant.S).append(maxId);
-        return serialNo.toString();
+        return MdvnConstant.S + maxId;
     }
 }
 

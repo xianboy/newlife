@@ -41,7 +41,7 @@ public class RetrieveController {
      * @param bindingResult bindingResult
      * @return restResponse
      */
-    @PostMapping(value = "/retrieveById")
+    @PostMapping(value = "/retrieveDetailById")
     public RestResponse<?> retrieveDetailById(@RequestBody @Validated SingleCriterionRequest singleCriterionRequest, BindingResult bindingResult) throws BusinessException {
         BindingResultUtil.brResolve(bindingResult);
         return this.retrieveService.retrieveDetailById(singleCriterionRequest);

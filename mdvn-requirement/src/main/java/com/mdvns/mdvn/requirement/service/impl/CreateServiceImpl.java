@@ -118,7 +118,7 @@ public class CreateServiceImpl implements CreateService {
         //设置template
         reqmnt.setTemplateId(request.getTemplateId());
         //设置functionLabel
-        reqmnt.setFunctionLabelId(buildLabel(request.getCreatorId(), request.getFunctionLabel()));
+        reqmnt.setFunctionLabelId(buildLabel(request.getCreatorId(), serialNo, request.getFunctionLabel()));
         //设置startDate
         reqmnt.setStartDate(request.getStartDate());
         //设置endDate
@@ -136,14 +136,14 @@ public class CreateServiceImpl implements CreateService {
      * @param functionLabel functionLabel
      * @return labelId
      */
-    private Long buildLabel(Long creatorId, Object functionLabel) throws BusinessException {
+    private Long buildLabel(Long creatorId, String hostSerailNo, Object functionLabel) throws BusinessException {
         Long id = null;
         //如果functionLabel为Long类型, 则为已存在的过程方法的id,直接返回
         if (functionLabel instanceof Integer) {
             id = Long.valueOf((Integer) functionLabel);
         } else if (functionLabel instanceof String) {
             String customLabelUrl = webConfig.getCustomLabelUrl();
-            FunctionLabelModel labelModel = RestTemplateUtil.customLabel(customLabelUrl, new CustomFunctionLabelRequest(creatorId, (String) functionLabel));
+            FunctionLabelModel labelModel = RestTemplateUtil.customLabel(customLabelUrl, new CustomFunctionLabelRequest(creatorId, hostSerailNo, (String) functionLabel));
             id = labelModel.getId();
         }
         return id;
